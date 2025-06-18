@@ -1,9 +1,32 @@
-import random
+import discord
+from botfunc import gen_pass, coin_flip
 
-characters = "+-/*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+# Variabel intents menyimpan hak istimewa bot
+intents = discord.Intents.default()
+# Mengaktifkan hak istimewa message-reading
+intents.message_content = True
+# Membuat bot di variabel klien dan mentransfernya hak istimewa
+client = discord.Client(intents=intents)
 
-password = ""
-for i in range(10):
-    password += random.choice(characters)
+@client.event
+async def on_ready():
+    print(f'Kita telah masuk sebagai {client.user}')
 
-print(password)
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.content.startswith('$halo'):
+        await message.channel.send("Hi!")
+    elif message.content.startswith('$bye'):
+        await message.channel.send("\U0001f642")
+    elif message.content.startswith('$pw'):
+        password = gen_pass(10)
+        await message.channel.send(password)
+    elif message.content.startswith('$cf'):
+        flip = coin_flip()
+        await message.channel.send(flip)
+    else:
+        await message.channel.send(message.content)
+
+client.run("")
