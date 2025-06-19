@@ -8,10 +8,8 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix='$', intents=intents)
 
-# Active number games per user
 active_numbers = {}
 
-# Scoreboard per user
 user_scores = {}
 
 @bot.event
@@ -39,7 +37,7 @@ async def guessing(ctx):
 @bot.command()
 async def score(ctx):
     score = user_scores.get(ctx.author.id, 0)
-    await ctx.send(f'Your score is: {score}')
+    await ctx.send(f'Score: {score}')
 
 @bot.event
 async def on_message(message):
@@ -59,10 +57,12 @@ async def on_message(message):
         correct = active_numbers[user_id]
         if guess == correct:
             await message.channel.send("Correct.")
-
-            # Update score
             user_scores[user_id] = user_scores.get(user_id, 0) + 1
         else:
             await message.channel.send("Incorrect. Retry?")
+
+@bot.command()
+async def helpme(ctx):
+    await ctx.send("I can do these: hello heh password guessing score")
 
 bot.run()
